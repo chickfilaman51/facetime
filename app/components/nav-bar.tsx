@@ -2,6 +2,7 @@ import { ModeToggle } from "@/app/dark-mode";
 import { Button } from "@/components/ui/button";
 // @ts-ignore
 import { LayoutDashboard } from "lucide-react";
+import Link from "next/link";
 
 export default function Navbar() {
   function AppLogo() {
@@ -19,8 +20,10 @@ export default function Navbar() {
     );
   }
 
+
+
   return (
-    <div className=" p-3 flex m-5 mx-8 items-center justify-between flex-wrap">
+    <div className="p-3 flex m-5 mx-8 items-center justify-between flex-wrap">
       <AppLogo />
       <div className="flex gap-4 items-center flex-wrap justify-center md:justify-start text-2xl">
         <a href="#" className="hover:underline">
@@ -32,8 +35,10 @@ export default function Navbar() {
       </div>
       <div className="flex gap-4 items-center flex-wrap justify-end">
         <ModeToggle />
-        <Button className="whitespace-nowrap h-11 text-2xl px-3">Get Started</Button>
+        <Link href="/upload">
+          <Button className="whitespace-nowrap h-11 text-2xl px-3">Get Started</Button>
+        </Link>
       </div>
     </div>
   );
-}
+};

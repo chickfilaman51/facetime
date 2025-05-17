@@ -17,22 +17,20 @@ export default function Home() {
     </div>
   );
 }
-
 function HeroSection() {
   return (
-    <div className="flex flex-col items-center justify-center text-center py-20 px-4 mt-5 md:mt-5">
+    <div className="flex shadow-md flex-col items-center justify-center text-center py-20 px-4 mt-5 md:mt-5 bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100">
       <img
         src="aiface.png" 
         alt="Face"
-        className="w-100 h-100 mb-6 rounded-full object-cover"
+        className="w-90 h-90 mb-6 rounded-full object-cover"
       />
-      <h1 className="text-5xl md:text-5xl font-bold mb-4">
+      <h1 className="text-9xl md:text-9xl font-mono font-bold mb-4">
         FaceTIME
       </h1>
       <p className="text-2xl text-gray-600 text-bold mb-8 mx-0 md:mx-44">
         The first AI-powered acne detection and analysis tool that helps you reach your maximum facial potential.
       </p>
-      <Button className="h-12">Explore Our Services</Button>
     </div>
   );
 }
