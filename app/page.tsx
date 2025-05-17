@@ -20,11 +20,11 @@ export default function Home() {
 
 function HeroSection() {
   return (
-    <div className="flex flex-col items-center justify-center text-center py-20 px-4 mt-20 md:mt-36">
+    <div className="flex flex-col items-center justify-center text-center py-20 px-4 mt-5 md:mt-5">
       <img
         src="aiface.png" 
         alt="Face"
-        className="w-32 h-32 mb-6 rounded-full object-cover"
+        className="w-100 h-100 mb-6 rounded-full object-cover"
       />
       <h1 className="text-5xl md:text-5xl font-bold mb-4">
         FaceTIME
