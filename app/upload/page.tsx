@@ -26,7 +26,8 @@ export default function Dashboard() {
   const [lastAnalysis, setLastAnalysis] = useState<any>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null); // Selected date
   const imageRef = useRef<HTMLImageElement | null>(null);
-  const [scoreHistory, setScoreHistory] = useState<{ date: string; score: number }[]>([]);
+  const [scoreHistory, setScoreHistory] = useState<{ date: string; score: number; imageUrl: string }[]>([]);
+  const [sliderValue, setSliderValue] = useState(50); // 0 = old, 100 = recent
 
   const getChartData = () => ({
     labels: scoreHistory.map((entry) => entry.date),
@@ -89,10 +90,16 @@ export default function Dashboard() {
       setAnalysis(data);
 
       // Update history
+      const currentImageUrl = URL.createObjectURL(file);
       setScoreHistory((prev) => [
         ...prev,
-        { date: selectedDate || new Date().toISOString().slice(0, 10), score: data.skin_score },
+        {
+          date: selectedDate || new Date().toISOString().slice(0, 10),
+          score: data.skin_score,
+          imageUrl: currentImageUrl,
+        },
       ]);
+
 
       // Save for View Score tab
       setLastUploadedImage(URL.createObjectURL(file));
@@ -155,6 +162,15 @@ export default function Dashboard() {
         >
           Upload Picture
         </button>
+        <button
+          onClick={() => handleTabChange("time")}
+          className={`p-4 rounded-lg text-lg font-semibold ${
+            activeTab === "time" ? "bg-blue-500 text-white" : "bg-gray-300"
+          }`}
+        >
+          Time Machine
+        </button>
+
       </div>
 
       {/* Main Content */}
@@ -320,6 +336,90 @@ export default function Dashboard() {
             )}
           </div>
         )}
+       {activeTab === "time" && (
+        <div className="w-full max-w-4xl mx-auto flex flex-col items-center">
+          <h1 className="text-5xl font-bold mb-6 text-center">Time Machine</h1>
+
+          {/* Static Text */}
+          <p className="text-lg text-gray-600 mb-4 text-center">Drag the line to compare images</p>
+
+          {scoreHistory.length >= 2 ? (
+            <div className="relative w-full h-[400px] mt-6">
+              {/* First Image */}
+              <div className="absolute inset-0">
+                <img
+                  src={scoreHistory[0].imageUrl} // First uploaded image
+                  alt="First Upload"
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              </div>
+
+              {/* Second Image */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  clipPath: `polygon(0 0, ${sliderValue}% 0, ${sliderValue}% 100%, 0 100%)`, // Clip the second image based on slider value
+                }}
+              >
+                <img
+                  src={scoreHistory[scoreHistory.length - 1].imageUrl} // Most recent uploaded image
+                  alt="Latest Upload"
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              </div>
+
+              {/* Draggable Vertical Line */}
+              <div
+                className="absolute inset-y-0 flex items-center justify-center"
+                style={{
+                  left: `${sliderValue}%`,
+                  width: "4px",
+                  backgroundColor: "rgba(0, 0, 0, 0.7)",
+                  cursor: "ew-resize",
+                }}
+                onMouseDown={(e) => {
+                  const rect = e.currentTarget.parentElement?.getBoundingClientRect();
+                  const onMouseMove = (moveEvent: MouseEvent) => {
+                    if (rect) {
+                      const newSliderValue = Math.min(
+                        100,
+                        Math.max(0, ((moveEvent.clientX - rect.left) / rect.width) * 100)
+                      );
+                      setSliderValue(newSliderValue);
+                    }
+                  };
+
+                  const onMouseUp = () => {
+                    document.removeEventListener("mousemove", onMouseMove);
+                    document.removeEventListener("mouseup", onMouseUp);
+                  };
+
+                  document.addEventListener("mousemove", onMouseMove);
+                  document.addEventListener("mouseup", onMouseUp);
+                }}
+              >
+                {/* Circle with Arrow */}
+                <div
+                  className="w-8 h-8 bg-black text-white flex items-center justify-center rounded-full"
+                  style={{
+                    transform: "translate(0,-50%)", // Center the circle horizontally and vertically
+                    position: "absolute",
+                    top: "50%", // Vertically center the circle
+                  }}
+                >
+                  ⇔
+                </div>
+              </div>
+            </div>
+          ) : (
+            <p className="text-xl text-gray-600 mt-8">
+              Upload at least 2 images to compare.
+            </p>
+          )}
+        </div>
+      )}
+
+      
       </div>
     </div>
   );

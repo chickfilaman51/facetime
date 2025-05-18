@@ -25,12 +25,7 @@ export default function Navbar() {
     <div className="p-3 flex m-5 mx-8 items-center justify-between flex-wrap">
       <AppLogo />
       <div className="flex gap-4 items-center flex-wrap justify-center md:justify-start text-2xl">
-        <a href="#" className="hover:underline">
-          Home
-        </a>
-        <a href="#" className="hover:underline">
-          About
-        </a>
+        
       </div>
       <div className="flex gap-4 items-center flex-wrap justify-end">
         <ModeToggle />
