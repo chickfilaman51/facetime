@@ -43,21 +43,21 @@ const FeaturesSection = () => {
   const featureData = [
     {
       icon: <Lightbulb className="w-8 h-8 text-gray-600" />,
-      title: "Innovative Solutions",
+      title: "Innovation.",
       description:
-        "Access cutting-edge technology designed to drive growth and efficiency.",
+        "We use cutting-edge technology like AI-powered acne detection and analysis.",
     },
     {
       icon: <Rocket className="w-8 h-8 text-gray-600" />,
-      title: "Accelerated Growth",
+      title: "Progress.",
       description:
-        "Achieve remarkable success with our proven strategies and expert guidance.",
+        "We help millions of people with acne and various skin cancers overcome their challenges.",
     },
     {
       icon: <ShieldCheck className="w-8 h-8 text-gray-600" />,
-      title: "Trusted Partnership",
+      title: "Security.",
       description:
-        "Rely on our dedicated team to provide exceptional support and reliable solutions.",
+        "Our platform is secure and alows users to safely track their progress with in interactive interface.",
     },
   ];
 
