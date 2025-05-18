@@ -328,7 +328,7 @@ if (!isLoggedIn) {
 
             {!lastAnalysis && (
               <p className="text-lg text-gray-500 mt-4">
-                No analysis available. Please upload an image in the "Upload Picture" tab.
+                No analysis available. Please upload an image in the "Upload Picture" tab to see your facial skin score.
               </p>
             )}
           </div>
@@ -361,6 +361,7 @@ if (!isLoggedIn) {
               <li>Take a picture facing directly at the camera.</li>
               <li>Avoid distractions like hair or accessories covering your face.</li>
               <li>Ensure good lighting for clear visibility.</li>
+              <li>Include ONLY your face in the photo.</li>
             </ul>
           </div>
 
