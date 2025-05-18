@@ -143,11 +143,11 @@ export default function Dashboard() {
 
               <h3 className="text-2xl font-semibold mb-2">Acne Counts:</h3>
               <ul className="list-disc list-inside mb-4">
-                {Object.entries(lastAnalysis.acne_counts).map(([type, count]) => (
-                  <li key={type}>
-                    {type}: {count}
-                  </li>
-                ))}
+              {Object.entries(lastAnalysis.acne_counts as Record<string, number>).map(([type, count]) => (
+                <li key={type}>
+                  {type}: {count}
+                </li>
+              ))}
               </ul>
 
               <h3 className="text-2xl font-semibold mb-2">Recommendations & Feedback:</h3>
@@ -246,11 +246,12 @@ export default function Dashboard() {
 
                 <h3 className="text-2xl font-semibold mb-2">Acne Counts:</h3>
                 <ul className="list-disc list-inside mb-4">
-                  {Object.entries(analysis.acne_counts).map(([type, count]) => (
-                    <li key={type}>
-                      {type}: {count}
-                    </li>
-                  ))}
+                {Object.entries(lastAnalysis.acne_counts as Record<string, number>).map(([type, count]) => (
+                  <li key={type}>
+                    {type}: {count}
+                  </li>
+                ))}
+
                 </ul>
 
                 <h3 className="text-2xl font-semibold mb-2">Recommendations & Feedback:</h3>
