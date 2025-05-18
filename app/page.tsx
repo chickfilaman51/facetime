@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTheme } from "next-themes";
-// Assuming you're using next-themes
+
 import { Lightbulb, Rocket, ShieldCheck } from "lucide-react";
 import { ReactNode } from "react";
 import Navbar from "./components/nav-bar";
