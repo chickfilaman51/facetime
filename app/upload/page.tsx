@@ -211,26 +211,37 @@ if (!isLoggedIn) {
 
   const renderBoundingBoxes = () => {
     if (!analysis || !uploadedImage) return null;
-
+  
     const img = imageRef.current;
     const boxes = (analysis as any).predictions || [];
     const scaleX = img ? img.width / img.naturalWidth : 1;
     const scaleY = img ? img.height / img.naturalHeight : 1;
-
+  
     return boxes.map((box: any, i: number) => {
+      // Adjust coordinates to center the bounding box
+      const left = (box.x - box.width / 2) * scaleX;
+      const top = (box.y - box.height / 2) * scaleY;
+      const width = box.width * scaleX;
+      const height = box.height * scaleY;
+  
       const style = {
         position: "absolute" as const,
-        border: "2px solid #ff0000",
-        left: box.x * scaleX,
-        top: box.y * scaleY,
-        width: box.width * scaleX,
-        height: box.height * scaleY,
+        border: "2px solid #00ff00", // Green border to match your Python example
+        left: `${left}px`,
+        top: `${top}px`,
+        width: `${width}px`,
+        height: `${height}px`,
         pointerEvents: "none" as const,
         boxSizing: "border-box" as const,
         borderRadius: "4px",
       };
-
-      return <div key={i} style={style}></div>;
+  
+      return (
+        <div key={i} style={style}>
+          {/* Add confidence score as a label */}
+          
+        </div>
+      );
     });
   };
 
