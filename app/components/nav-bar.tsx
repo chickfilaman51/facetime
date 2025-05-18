@@ -1,6 +1,5 @@
 import { ModeToggle } from "@/app/dark-mode";
 import { Button } from "@/components/ui/button";
-// @ts-ignore
 import { LayoutDashboard } from "lucide-react";
 import Link from "next/link";
 

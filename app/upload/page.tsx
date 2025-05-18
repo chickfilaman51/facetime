@@ -5,12 +5,11 @@ import { useState, useRef } from "react";
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("score"); // Default tab is "score"
   const [uploadedImage, setUploadedImage] = useState<string | null>(null); // Uploaded image URL
-  const [fileData, setFileData] = useState<File | null>(null); // The actual File object to send
-  const [analysis, setAnalysis] = useState<any>(null); // API response JSON
+  const [analysis, setAnalysis] = useState<unknown>(null); // API response JSON
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastUploadedImage, setLastUploadedImage] = useState<string | null>(null);
-  const [lastAnalysis, setLastAnalysis] = useState<any>(null);
+  const [lastAnalysis, setLastAnalysis] = useState<unknown>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null); // Selected date
   const imageRef = useRef<HTMLImageElement | null>(null);
 
@@ -18,7 +17,6 @@ export default function Dashboard() {
     if (tab === "upload") {
       // Clear upload-only state when entering Upload tab
       setUploadedImage(null);
-      setFileData(null);
       setAnalysis(null);
       setError(null);
     }
@@ -32,7 +30,6 @@ export default function Dashboard() {
       // Create image preview URL
       const imageUrl = URL.createObjectURL(file);
       setUploadedImage(imageUrl);
-      setFileData(file);
       setAnalysis(null);
       setError(null);
 
