@@ -247,7 +247,7 @@ if (!isLoggedIn) {
         <h2 className="text-4xl font-bold mb-8 mt-8 text-center">Dashboard</h2> 
         <button
           onClick={() => handleTabChange("score")}
-          className={`p-4 rounded-lg text-lg font-semibold ${
+          className={`py-8 rounded-lg text-xl font-semibold ${
             activeTab === "score" ? "bg-blue-500 text-white" : "bg-gray-300"
           }`}
         >
@@ -255,7 +255,7 @@ if (!isLoggedIn) {
         </button>
         <button
           onClick={() => handleTabChange("upload")}
-          className={`p-4 rounded-lg text-lg font-semibold ${
+          className={`py-8 rounded-lg text-xl font-semibold ${
             activeTab === "upload" ? "bg-blue-500 text-white" : "bg-gray-300"
           }`}
         >
@@ -263,7 +263,7 @@ if (!isLoggedIn) {
         </button>
         <button
           onClick={() => handleTabChange("time")}
-          className={`p-4 rounded-lg text-lg font-semibold ${
+          className={`py-8 rounded-lg text-xl font-semibold ${
             activeTab === "time" ? "bg-blue-500 text-white" : "bg-gray-300"
           }`}
         >
