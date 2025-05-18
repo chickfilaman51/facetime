@@ -529,7 +529,7 @@ if (!isLoggedIn) {
                 <div
                   className="w-8 h-8 bg-black text-white flex items-center justify-center rounded-full"
                   style={{
-                    transform: "translate(-50%, -50%)", 
+                    transform: "translate(0%, -50%)", 
                     position: "absolute",
                     top: "50%", 
                   }}
