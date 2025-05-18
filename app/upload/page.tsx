@@ -1,23 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+import { Line } from "react-chartjs-2";
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 export default function Dashboard() {
-  const [activeTab, setActiveTab] = useState("score"); // Default tab is "score"
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null); // Uploaded image URL
-  const [analysis, setAnalysis] = useState<any>(null); // API response JSON
+  const imageRef = useRef<HTMLImageElement | null>(null);
+  const [activeTab, setActiveTab] = useState("score"); 
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null); 
+  const [analysis, setAnalysis] = useState<any>(null); 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastUploadedImage, setLastUploadedImage] = useState<string | null>(null);
   const [lastAnalysis, setLastAnalysis] = useState<any>(null);
-  const [selectedDate, setSelectedDate] = useState<string | null>(null); // Selected date
+  const [selectedDate, setSelectedDate] = useState<string | null>(null); 
   const [scoreHistory, setScoreHistory] = useState<{ date: string; score: number; imageUrl: string }[]>([]);
-  const [sliderValue, setSliderValue] = useState(50); // 0 = old, 100 = recent
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login state
+  const [sliderValue, setSliderValue] = useState(50);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [isCreatingAccount, setIsCreatingAccount] = useState(false); // Toggle between login and create account
-  const [confirmPassword, setConfirmPassword] = useState(""); // Confirm password for account creation
+  const [isCreatingAccount, setIsCreatingAccount] = useState(false); 
+  const [confirmPassword, setConfirmPassword] = useState(""); 
 
   const handleLogin = (e: React.FormEvent) => {
   e.preventDefault();
@@ -35,7 +50,7 @@ const handleCreateAccount = (e: React.FormEvent) => {
     setError("Passwords do not match");
     return;
   }
-  // Replace this with your actual account creation logic
+
   setIsLoggedIn(true);
   setError(null);
 };
@@ -45,7 +60,7 @@ if (!isLoggedIn) {
     <div className="flex items-center justify-center h-screen bg-gray-100">
       <form
         onSubmit={isCreatingAccount ? handleCreateAccount : handleLogin}
-        className="p-10 bg-white shadow-lg rounded-lg w-[500px]" // Increased width and padding
+        className="p-10 bg-white shadow-lg rounded-lg w-[500px]" 
       >
         <h1 className="text-4xl font-bold mb-8 text-center">
           {isCreatingAccount ? "Create Account" : "Login"}
@@ -101,7 +116,7 @@ if (!isLoggedIn) {
             type="button"
             onClick={() => {
               setIsCreatingAccount(!isCreatingAccount);
-              setError(null); // Clear errors when switching modes
+              setError(null);
             }}
             className="text-primary font-semibold hover:underline"
           >
@@ -118,7 +133,7 @@ if (!isLoggedIn) {
       {
         label: "Skin Score Over Time",
         data: scoreHistory.map((entry) => entry.score),
-        borderColor: "rgba(59, 130, 246, 1)", // blue-500
+        borderColor: "rgba(59, 130, 246, 1)", 
         backgroundColor: "rgba(59, 130, 246, 0.2)",
         tension: 0.4,
       },
@@ -128,7 +143,6 @@ if (!isLoggedIn) {
 
   const handleTabChange = (tab: string) => {
     if (tab === "upload") {
-      // Clear upload-only state when entering Upload tab
       setUploadedImage(null);
       setAnalysis(null);
       setError(null);
@@ -140,13 +154,11 @@ if (!isLoggedIn) {
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      // Create image preview URL
       const imageUrl = URL.createObjectURL(file);
       setUploadedImage(imageUrl);
       setAnalysis(null);
       setError(null);
 
-      // Call API to analyze image
       await analyzeImage(file);
     }
   };
@@ -172,7 +184,7 @@ if (!isLoggedIn) {
       const data = await response.json();
       setAnalysis(data);
 
-      // Update history
+    
       const currentImageUrl = URL.createObjectURL(file);
       setScoreHistory((prev) => [
         ...prev,
@@ -184,7 +196,7 @@ if (!isLoggedIn) {
       ]);
 
 
-      // Save for View Score tab
+
       setLastUploadedImage(URL.createObjectURL(file));
       setLastAnalysis(data);
 
@@ -196,15 +208,13 @@ if (!isLoggedIn) {
   };
   
 
-  // Helper: render bounding boxes overlay on image
   const renderBoundingBoxes = () => {
-    if (!analysis || !uploadedImage || !imageRef.current) return null;
+    if (!analysis || !uploadedImage) return null;
 
     const img = imageRef.current;
     const boxes = (analysis as any).predictions || [];
-    // Scale bounding boxes to match the displayed image size
-    const scaleX = img.width / img.naturalWidth;
-    const scaleY = img.height / img.naturalHeight;
+    const scaleX = img ? img.width / img.naturalWidth : 1;
+    const scaleY = img ? img.height / img.naturalHeight : 1;
 
     return boxes.map((box: any, i: number) => {
       const style = {
@@ -225,16 +235,15 @@ if (!isLoggedIn) {
 
   return (
     <div className="flex min-h-screen from-blue-100 via-blue-50 to-blue-100">
-      {/* Left Sidebar */}
-      {/* Left Sidebar */}
+
       <button
-      onClick={() => setIsLoggedIn(false)} // Reset login state
+      onClick={() => setIsLoggedIn(false)}
       className="absolute top-4 right-4 bg-red-500 text-white px-6 py-4 rounded-lg hover:bg-red-600 text-lg font-semibold"
     >
       Log Out
     </button>
-      <div className="w-1/4 bg-gray-200 p-4 flex flex-col space-y-8"> {/* Increased spacing between buttons */}
-        <h2 className="text-4xl font-bold mb-8 mt-8 text-center">Dashboard</h2> {/* Increased font size for the heading */}
+      <div className="w-1/4 bg-gray-200 p-4 flex flex-col space-y-8"> 
+        <h2 className="text-4xl font-bold mb-8 mt-8 text-center">Dashboard</h2> 
         <button
           onClick={() => handleTabChange("score")}
           className={`p-4 rounded-lg text-lg font-semibold ${
@@ -262,11 +271,11 @@ if (!isLoggedIn) {
 
       </div>
 
-      {/* Main Content */}
+
       <div className="flex-1 flex flex-col items-center justify-center p-8 bg-gradient-to-r from-blue-100 via-blue-50 to-blue-100">
       {activeTab === "score" && (
         <div className="flex flex-col md:flex-row w-full max-w-6xl items-start gap-8">
-          {/* Left Side - Image and Analysis */}
+     
           <div className="w-full md:w-1/2">
             <h1 className="text-5xl font-bold mb-6 text-center md:text-left">Your Score</h1>
 
@@ -313,7 +322,7 @@ if (!isLoggedIn) {
             )}
           </div>
 
-          {/* Right Side - Chart */}
+          
           <div className="w-full md:w-1/2">
             <h2 className="text-5xl font-bold mb-6 text-center md:text-left">Progress Over Time</h2>
             <div className="bg-white p-4 rounded shadow">
@@ -333,7 +342,7 @@ if (!isLoggedIn) {
         <div className="text-center w-full max-w-xl">
           <h1 className="text-5xl font-bold mb-6">Upload a Picture</h1>
 
-          {/* Reminders Section */}
+
           <div className="bg-gray-100 p-4 rounded-lg shadow-md mb-6">
             <h2 className="text-2xl font-semibold mb-4">Reminders for Uploading:</h2>
             <ul className="list-disc list-inside text-lg text-gray-700">
@@ -344,26 +353,26 @@ if (!isLoggedIn) {
             </ul>
           </div>
 
-          {/* File Input Section */}
+
           <form
             className="flex flex-col items-center space-y-4"
-            onSubmit={(e) => e.preventDefault()} // Prevent form submission
+            onSubmit={(e) => e.preventDefault()}
           >
-            {/* Date Picker */}
+      
             <input
               type="date"
               className="text-gray-500 text-lg py-3 px-4 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              onChange={(e) => setSelectedDate(e.target.value)} // Update selected date
+              onChange={(e) => setSelectedDate(e.target.value)} 
             />
 
-            {/* File Input */}
+          
             <label className="block text-lg text-gray-500 file:py-3 file:px-6 file:rounded-md file:border-0 file:text-lg file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600">
               <input
                 type="file"
                 accept="image/*"
                 onChange={handleImageUpload}
                 className="hidden"
-                disabled={!selectedDate} // Disable file input if no date is selected
+                disabled={!selectedDate}
               />
               <span
                 className={`cursor-pointer py-3 px-6 rounded-md ${
@@ -374,7 +383,7 @@ if (!isLoggedIn) {
               </span>
             </label>
 
-            {/* Error Message */}
+   
             {!selectedDate && (
               <p className="text-red-500 text-sm mt-2">
                 Please select a date before uploading a picture.
@@ -429,12 +438,12 @@ if (!isLoggedIn) {
         <div className="w-full max-w-4xl mx-auto flex flex-col items-center">
           <h1 className="text-5xl font-bold mb-6 text-center">Time Machine</h1>
 
-          {/* Static Text */}
+       
           <p className="text-lg text-gray-600 mb-4 text-center">Drag the line to compare images</p>
 
           {scoreHistory.length >= 2 ? (
             <div className="relative w-full h-[400px] mt-6">
-              {/* First Image (Before) */}
+         
               <div
                 className="absolute inset-0"
                 style={{
@@ -442,25 +451,25 @@ if (!isLoggedIn) {
                 }}
               >
                 <img
-                  src={scoreHistory[0].imageUrl} // First uploaded image
+                  src={scoreHistory[0].imageUrl} 
                   alt="First Upload"
                   className="w-full h-full object-cover rounded-lg"
                 />
-                {/* Before Label */}
+           
                 <div className="absolute top-4 left-4 bg-black text-white px-3 py-1 rounded">
                   Before
                 </div>
-                {/* Before Score */}
+    
                 <div className="absolute top-16 left-4 bg-gray-800 text-white px-3 py-1 rounded">
                   Score: {scoreHistory[0].score}
                 </div>
-                {/* Before Date */}
+         
                 <div className="absolute top-24 left-4 bg-gray-800 text-white px-3 py-1 rounded">
                   Date: {new Date(scoreHistory[0].date).toLocaleDateString()}
                 </div>
               </div>
 
-              {/* Second Image (After) */}
+       
               <div
                 className="absolute inset-0"
                 style={{
@@ -468,25 +477,25 @@ if (!isLoggedIn) {
                 }}
               >
                 <img
-                  src={scoreHistory[scoreHistory.length - 1].imageUrl} // Most recent uploaded image
+                  src={scoreHistory[scoreHistory.length - 1].imageUrl} 
                   alt="Latest Upload"
                   className="w-full h-full object-cover rounded-lg"
                 />
-                {/* After Label */}
+    
                 <div className="absolute top-4 right-4 bg-black text-white px-3 py-1 rounded">
                   After
                 </div>
-                {/* After Score */}
+        
                 <div className="absolute top-16 right-4 bg-gray-800 text-white px-3 py-1 rounded">
                   Score: {scoreHistory[scoreHistory.length - 1].score}
                 </div>
-                {/* After Date */}
+      
                 <div className="absolute top-24 right-4 bg-gray-800 text-white px-3 py-1 rounded">
                   Date: {new Date(scoreHistory[scoreHistory.length - 1].date).toLocaleDateString()}
                 </div>
               </div>
 
-              {/* Draggable Vertical Line */}
+           
               <div
                 className="absolute inset-y-0 flex items-center justify-center"
                 style={{
@@ -516,13 +525,13 @@ if (!isLoggedIn) {
                   document.addEventListener("mouseup", onMouseUp);
                 }}
               >
-                {/* Circle with Arrow */}
+
                 <div
                   className="w-8 h-8 bg-black text-white flex items-center justify-center rounded-full"
                   style={{
-                    transform: "translate(-50%, -50%)", // Center the circle horizontally and vertically
+                    transform: "translate(-50%, -50%)", 
                     position: "absolute",
-                    top: "50%", // Vertically center the circle
+                    top: "50%", 
                   }}
                 >
                   ⇔
@@ -535,7 +544,7 @@ if (!isLoggedIn) {
             </p>
           )}
 
-          {/* Calendar Section */}
+
           {scoreHistory.length > 0 && (
             <div className="mt-8 w-full max-w-md">
               <h2 className="text-2xl font-bold mb-4 text-center">Download Image by Date</h2>

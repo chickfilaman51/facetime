@@ -7,6 +7,7 @@ import { useTheme } from "next-themes";
 import { Lightbulb, Rocket, ShieldCheck } from "lucide-react";
 import { ReactNode } from "react";
 import Navbar from "./components/nav-bar";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -87,13 +88,14 @@ const FeaturesSection = () => {
     <div className={`${bgColor} py-16`}>
       <div className="max-w-4xl mx-auto text-center px-4">
         <h1 className="text-4xl font-semibold mb-4">
-          Empowering Your Journey to Success
+          Empowering Your Journey to Face Perfection
         </h1>
         <p className="text-lg text-gray-600 mb-12">
-          We provide the tools, technology, and support you need to unlock your
-          potential, overcome challenges, and achieve your goals.
+          We provide the tools needed to help you achieve your best self. Our AI-powered acne detection and tracker allows you to figure out specific areas to improve on and motivates you using a time traveling machine displaying your progress. 
         </p>
-
+        <Link href="/upload">
+          <Button className="whitespace-nowrap h-11 text-2xl px-3">Begin Your Journey to Perfection</Button>
+        </Link>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {featureData.map((feature, index) => (
             <FeatureCard
