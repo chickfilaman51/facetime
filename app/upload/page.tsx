@@ -246,15 +246,17 @@ if (!isLoggedIn) {
 
   return (
     <div className="flex min-h-screen from-blue-100 via-blue-50 to-blue-100">
-
+      {/* Log Out Button */}
       <button
-      onClick={() => setIsLoggedIn(false)}
-      className="absolute top-4 right-4 bg-red-500 text-white px-6 py-4 rounded-lg hover:bg-red-600 text-lg font-semibold"
-    >
-      Log Out
-    </button>
-      <div className="w-1/4 bg-gray-200 p-4 flex flex-col space-y-8"> 
-        <h2 className="text-4xl font-bold mb-8 mt-8 text-center">Dashboard</h2> 
+        onClick={() => setIsLoggedIn(false)}
+        className="absolute top-4 right-4 bg-red-500 text-white px-6 py-4 rounded-lg hover:bg-red-600 text-lg font-semibold"
+      >
+        Log Out
+      </button>
+  
+      {/* Sidebar (Dashboard UI) */}
+      <div className="w-1/4 bg-gray-200 p-4 flex flex-col space-y-8 fixed h-full">
+        <h2 className="text-4xl font-bold mb-8 mt-8 text-center">Dashboard</h2>
         <button
           onClick={() => handleTabChange("score")}
           className={`py-8 rounded-lg text-xl font-semibold ${
@@ -279,11 +281,10 @@ if (!isLoggedIn) {
         >
           Time Machine
         </button>
-
       </div>
 
 
-      <div className="flex-1 flex flex-col items-center justify-center p-8 bg-gradient-to-r from-blue-100 via-blue-50 to-blue-100">
+      <div className="ml-[25%] flex-1 flex flex-col items-center justify-center p-8 bg-gradient-to-r from-blue-100 via-blue-50 to-blue-100">
       {activeTab === "score" && (
         <div className="flex flex-col md:flex-row w-full max-w-6xl items-start gap-8">
      
