@@ -5,11 +5,11 @@ import { useState, useRef } from "react";
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("score"); // Default tab is "score"
   const [uploadedImage, setUploadedImage] = useState<string | null>(null); // Uploaded image URL
-  const [analysis, setAnalysis] = useState<unknown>(null); // API response JSON
+  const [analysis, setAnalysis] = useState<any>(null); // API response JSON
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastUploadedImage, setLastUploadedImage] = useState<string | null>(null);
-  const [lastAnalysis, setLastAnalysis] = useState<unknown>(null);
+  const [lastAnalysis, setLastAnalysis] = useState<any>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null); // Selected date
   const imageRef = useRef<HTMLImageElement | null>(null);
 
@@ -75,8 +75,7 @@ export default function Dashboard() {
     if (!analysis || !uploadedImage || !imageRef.current) return null;
 
     const img = imageRef.current;
-    const boxes = analysis.predictions || [];
-
+    const boxes = (analysis as any).predictions || [];
     // Scale bounding boxes to match the displayed image size
     const scaleX = img.width / img.naturalWidth;
     const scaleY = img.height / img.naturalHeight;
