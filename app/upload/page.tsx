@@ -1,6 +1,20 @@
 "use client";
 
 import { useState, useRef } from "react";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Line } from "react-chartjs-2";
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("score"); // Default tab is "score"
@@ -12,6 +26,21 @@ export default function Dashboard() {
   const [lastAnalysis, setLastAnalysis] = useState<any>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null); // Selected date
   const imageRef = useRef<HTMLImageElement | null>(null);
+  const [scoreHistory, setScoreHistory] = useState<{ date: string; score: number }[]>([]);
+
+  const getChartData = () => ({
+    labels: scoreHistory.map((entry) => entry.date),
+    datasets: [
+      {
+        label: "Skin Score Over Time",
+        data: scoreHistory.map((entry) => entry.score),
+        borderColor: "rgba(59, 130, 246, 1)", // blue-500
+        backgroundColor: "rgba(59, 130, 246, 0.2)",
+        tension: 0.4,
+      },
+    ],
+  });
+  
 
   const handleTabChange = (tab: string) => {
     if (tab === "upload") {
@@ -58,10 +87,17 @@ export default function Dashboard() {
   
       const data = await response.json();
       setAnalysis(data);
-  
+
+      // Update history
+      setScoreHistory((prev) => [
+        ...prev,
+        { date: selectedDate || new Date().toISOString().slice(0, 10), score: data.skin_score },
+      ]);
+
       // Save for View Score tab
       setLastUploadedImage(URL.createObjectURL(file));
       setLastAnalysis(data);
+
     } catch (err: any) {
       setError(err.message || "Unknown error");
     } finally {
@@ -124,52 +160,68 @@ export default function Dashboard() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col items-center justify-center p-8 bg-gradient-to-r from-blue-100 via-blue-50 to-blue-100">
       {activeTab === "score" && (
-        <div className="text-center w-full max-w-xl">
-          <h1 className="text-5xl font-bold mb-6">Your Score</h1>
+        <div className="flex flex-col md:flex-row w-full max-w-6xl items-start gap-8">
+          {/* Left Side - Image and Analysis */}
+          <div className="w-full md:w-1/2">
+            <h1 className="text-5xl font-bold mb-6 text-center md:text-left">Your Score</h1>
 
-          {lastUploadedImage && (
-            <div className="relative mt-8 mx-auto w-80 h-80 border border-gray-300 rounded-lg overflow-hidden">
-              <img
-                src={lastUploadedImage}
-                alt="Most Recent Upload"
-                className="w-full h-full object-cover"
-              />
-            </div>
-          )}
+            {lastUploadedImage && (
+              <div className="relative mt-4 w-full border border-gray-300 rounded-lg overflow-hidden">
+                <img
+                  src={lastUploadedImage}
+                  alt="Most Recent Upload"
+                  className="w-full object-cover"
+                />
+              </div>
+            )}
 
-          {lastAnalysis && (
-            <div className="mt-6 text-left bg-white p-4 rounded shadow max-w-xl mx-auto">
-              <h2 className="text-3xl font-bold mb-4">Skin Score: {lastAnalysis.skin_score}</h2>
+            {lastAnalysis && (
+              <div className="mt-6 text-left bg-white p-4 rounded shadow">
+                <h2 className="text-3xl font-bold mb-4">Skin Score: {lastAnalysis.skin_score}</h2>
 
-              <h3 className="text-2xl font-semibold mb-2">Acne Counts:</h3>
-              <ul className="list-disc list-inside mb-4">
-              {Object.entries(lastAnalysis.acne_counts as Record<string, number>).map(([type, count]) => (
-                <li key={type}>
-                  {type}: {count}
-                </li>
-              ))}
-              </ul>
-
-              <h3 className="text-2xl font-semibold mb-2">Recommendations & Feedback:</h3>
-              <ul className="list-disc list-inside">
-                {lastAnalysis.feedback.map((fb: any, idx: number) => (
-                  <li key={idx} className="mb-2">
-                    {fb.message
-                      ? fb.message
-                      : `${fb.acne_type} (${fb.count}): ${fb.note || fb.encouragement}`}
+                <h3 className="text-2xl font-semibold mb-2">Acne Counts:</h3>
+                <ul className="list-disc list-inside mb-4">
+                {Object.entries(lastAnalysis.acne_counts as Record<string, number>).map(([type, count]) => (
+                  <li key={type}>
+                    {type}: {count}
                   </li>
                 ))}
-              </ul>
-            </div>
-          )}
+                </ul>
 
-          {!lastAnalysis && (
-            <p className="text-lg text-gray-500 mt-4">
-              No analysis available. Please upload an image in the "Upload Picture" tab.
-            </p>
-          )}
+                <h3 className="text-2xl font-semibold mb-2">Recommendations & Feedback:</h3>
+                <ul className="list-disc list-inside">
+                  {lastAnalysis.feedback.map((fb: any, idx: number) => (
+                    <li key={idx} className="mb-2">
+                      {fb.message
+                        ? fb.message
+                        : `${fb.acne_type} (${fb.count}): ${fb.note || fb.encouragement}`}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {!lastAnalysis && (
+              <p className="text-lg text-gray-500 mt-4">
+                No analysis available. Please upload an image in the "Upload Picture" tab.
+              </p>
+            )}
+          </div>
+
+          {/* Right Side - Chart */}
+          <div className="w-full md:w-1/2">
+            <h2 className="text-3xl font-bold mb-6 text-center md:text-left">Progress Over Time</h2>
+            <div className="bg-white p-4 rounded shadow">
+              {scoreHistory.length > 0 ? (
+                <Line data={getChartData()} />
+              ) : (
+                <p className="text-gray-500 text-center">No data yet. Upload an image to see your progress.</p>
+              )}
+            </div>
+          </div>
         </div>
       )}
+
 
 
       {activeTab === "upload" && (
