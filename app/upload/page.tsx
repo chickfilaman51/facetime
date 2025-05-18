@@ -345,20 +345,37 @@ export default function Dashboard() {
 
           {scoreHistory.length >= 2 ? (
             <div className="relative w-full h-[400px] mt-6">
-              {/* First Image */}
-              <div className="absolute inset-0">
+              {/* First Image (Before) */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  clipPath: `polygon(0 0, ${sliderValue}% 0, ${sliderValue}% 100%, 0 100%)`, // Clip the first image based on slider value
+                }}
+              >
                 <img
                   src={scoreHistory[0].imageUrl} // First uploaded image
                   alt="First Upload"
                   className="w-full h-full object-cover rounded-lg"
                 />
+                {/* Before Label */}
+                <div className="absolute top-4 left-4 bg-black text-white px-3 py-1 rounded">
+                  Before
+                </div>
+                {/* Before Score */}
+                <div className="absolute top-16 left-4 bg-gray-800 text-white px-3 py-1 rounded">
+                  Score: {scoreHistory[0].score}
+                </div>
+                {/* Before Date */}
+                <div className="absolute top-24 left-4 bg-gray-800 text-white mt-4 px-3 py-1 rounded">
+                  Date: {new Date(scoreHistory[0].date).toLocaleDateString()}
+                </div>
               </div>
 
-              {/* Second Image */}
+              {/* Second Image (After) */}
               <div
                 className="absolute inset-0"
                 style={{
-                  clipPath: `polygon(0 0, ${sliderValue}% 0, ${sliderValue}% 100%, 0 100%)`, // Clip the second image based on slider value
+                  clipPath: `polygon(${sliderValue}% 0, 100% 0, 100% 100%, ${sliderValue}% 100%)`, // Clip the second image based on slider value
                 }}
               >
                 <img
@@ -366,6 +383,18 @@ export default function Dashboard() {
                   alt="Latest Upload"
                   className="w-full h-full object-cover rounded-lg"
                 />
+                {/* After Label */}
+                <div className="absolute top-4 right-4 bg-black text-white px-3 py-1 rounded">
+                  After
+                </div>
+                {/* After Score */}
+                <div className="absolute top-16 right-4 bg-gray-800 text-white px-3 py-1 rounded">
+                  Score: {scoreHistory[scoreHistory.length - 1].score}
+                </div>
+                {/* After Date */}
+                <div className="absolute top-24 right-4 mt-4 bg-gray-800 text-white px-3 py-1 rounded">
+                  Date: {new Date(scoreHistory[scoreHistory.length - 1].date).toLocaleDateString()}
+                </div>
               </div>
 
               {/* Draggable Vertical Line */}
@@ -402,7 +431,7 @@ export default function Dashboard() {
                 <div
                   className="w-8 h-8 bg-black text-white flex items-center justify-center rounded-full"
                   style={{
-                    transform: "translate(0,-50%)", // Center the circle horizontally and vertically
+                    transform: "translate(0%, -50%)", // Center the circle horizontally and vertically
                     position: "absolute",
                     top: "50%", // Vertically center the circle
                   }}
@@ -418,8 +447,7 @@ export default function Dashboard() {
           )}
         </div>
       )}
-
-      
+                  
       </div>
     </div>
   );
