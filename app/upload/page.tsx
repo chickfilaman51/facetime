@@ -552,7 +552,7 @@ if (!isLoggedIn) {
             </div>
           ) : (
             <p className="text-xl text-gray-600 mt-8">
-              Upload at least 2 images to compare.
+              Upload at least 2 images to compare your before and after.
             </p>
           )}
 
