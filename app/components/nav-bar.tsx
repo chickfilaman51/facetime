@@ -12,7 +12,7 @@ export default function Navbar() {
             <LayoutDashboard className="text-primary-foreground" />
           </div>
           <h1 className={"text-[20px] flex gap-1 max-md:hidden"}>
-            <span className="font-bold">FaceTIME </span>
+            <span className="font-bold">FaceTIME</span>
           </h1>
         </div>
       </div>

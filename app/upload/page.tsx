@@ -324,7 +324,7 @@ if (!isLoggedIn) {
 
           
           <div className="w-full md:w-1/2">
-            <h2 className="text-5xl font-bold mb-6 text-center md:text-left">Progress Over Time</h2>
+            <h2 className="text-5xl font-bold mb-6 text-center md:text-left">Progress Tracker</h2>
             <div className="bg-white p-4 rounded shadow">
               {scoreHistory.length > 0 ? (
                 <Line data={getChartData()} />
