@@ -218,7 +218,7 @@ if (!isLoggedIn) {
     const scaleY = img ? img.height / img.naturalHeight : 1;
   
     return boxes.map((box: any, i: number) => {
-      // Adjust coordinates to center the bounding box
+
       const left = (box.x - box.width / 2) * scaleX;
       const top = (box.y - box.height / 2) * scaleY;
       const width = box.width * scaleX;
@@ -226,7 +226,7 @@ if (!isLoggedIn) {
   
       const style = {
         position: "absolute" as const,
-        border: "2px solid #00ff00", // Green border to match your Python example
+        border: "2px solid #00ff00",
         left: `${left}px`,
         top: `${top}px`,
         width: `${width}px`,
@@ -238,7 +238,6 @@ if (!isLoggedIn) {
   
       return (
         <div key={i} style={style}>
-          {/* Add confidence score as a label */}
           
         </div>
       );
