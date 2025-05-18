@@ -106,7 +106,7 @@ export default function Dashboard() {
       {/* Left Sidebar */}
       {/* Left Sidebar */}
       <div className="w-1/4 bg-gray-200 p-4 flex flex-col space-y-8"> {/* Increased spacing between buttons */}
-        <h2 className="text-4xl font-bold mb-8">Dashboard</h2> {/* Increased font size for the heading */}
+        <h2 className="text-4xl font-bold mb-8 mt-8 text-center">Dashboard</h2> {/* Increased font size for the heading */}
         <button
           onClick={() => handleTabChange("score")}
           className={`p-4 rounded-lg text-lg font-semibold ${
