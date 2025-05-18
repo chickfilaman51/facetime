@@ -1,20 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
-import { Line } from "react-chartjs-2";
-
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
-
+import { useState } from "react";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("score"); // Default tab is "score"
@@ -25,10 +11,107 @@ export default function Dashboard() {
   const [lastUploadedImage, setLastUploadedImage] = useState<string | null>(null);
   const [lastAnalysis, setLastAnalysis] = useState<any>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null); // Selected date
-  const imageRef = useRef<HTMLImageElement | null>(null);
   const [scoreHistory, setScoreHistory] = useState<{ date: string; score: number; imageUrl: string }[]>([]);
   const [sliderValue, setSliderValue] = useState(50); // 0 = old, 100 = recent
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login state
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [isCreatingAccount, setIsCreatingAccount] = useState(false); // Toggle between login and create account
+  const [confirmPassword, setConfirmPassword] = useState(""); // Confirm password for account creation
 
+  const handleLogin = (e: React.FormEvent) => {
+  e.preventDefault();
+  if (username === "admin" && password === "password") {
+    setIsLoggedIn(true);
+    setError(null);
+  } else {
+    setError("Invalid username or password");
+  }
+};
+
+const handleCreateAccount = (e: React.FormEvent) => {
+  e.preventDefault();
+  if (password !== confirmPassword) {
+    setError("Passwords do not match");
+    return;
+  }
+  // Replace this with your actual account creation logic
+  setIsLoggedIn(true);
+  setError(null);
+};
+
+if (!isLoggedIn) {
+  return (
+    <div className="flex items-center justify-center h-screen bg-gray-100">
+      <form
+        onSubmit={isCreatingAccount ? handleCreateAccount : handleLogin}
+        className="p-10 bg-white shadow-lg rounded-lg w-[500px]" // Increased width and padding
+      >
+        <h1 className="text-4xl font-bold mb-8 text-center">
+          {isCreatingAccount ? "Create Account" : "Login"}
+        </h1>
+        {error && <p className="text-red-500 mb-6 text-center">{error}</p>}
+        <div className="mb-6">
+          <label htmlFor="username" className="block text-lg font-medium text-gray-700">
+            Username
+          </label>
+          <input
+            type="text"
+            id="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary text-lg"
+          />
+        </div>
+        <div className="mb-6">
+          <label htmlFor="password" className="block text-lg font-medium text-gray-700">
+            Password
+          </label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary text-lg"
+          />
+        </div>
+        {isCreatingAccount && (
+          <div className="mb-6">
+            <label htmlFor="confirmPassword" className="block text-lg font-medium text-gray-700">
+              Confirm Password
+            </label>
+            <input
+              type="password"
+              id="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary text-lg"
+            />
+          </div>
+        )}
+        <button
+          type="submit"
+          className="w-full px-6 py-3 bg-primary text-white rounded-md hover:bg-primary-dark text-xl font-bold"
+        >
+          {isCreatingAccount ? "Create Account" : "Login"}
+        </button>
+        <p className="mt-6 text-center text-lg text-gray-600">
+          {isCreatingAccount ? "Already have an account?" : "Don't have an account?"}{" "}
+          <button
+            type="button"
+            onClick={() => {
+              setIsCreatingAccount(!isCreatingAccount);
+              setError(null); // Clear errors when switching modes
+            }}
+            className="text-primary font-semibold hover:underline"
+          >
+            {isCreatingAccount ? "Login" : "Create Account"}
+          </button>
+        </p>
+      </form>
+    </div>
+  );
+}
   const getChartData = () => ({
     labels: scoreHistory.map((entry) => entry.date),
     datasets: [
@@ -144,6 +227,12 @@ export default function Dashboard() {
     <div className="flex min-h-screen from-blue-100 via-blue-50 to-blue-100">
       {/* Left Sidebar */}
       {/* Left Sidebar */}
+      <button
+      onClick={() => setIsLoggedIn(false)} // Reset login state
+      className="absolute top-4 right-4 bg-red-500 text-white px-6 py-4 rounded-lg hover:bg-red-600 text-lg font-semibold"
+    >
+      Log Out
+    </button>
       <div className="w-1/4 bg-gray-200 p-4 flex flex-col space-y-8"> {/* Increased spacing between buttons */}
         <h2 className="text-4xl font-bold mb-8 mt-8 text-center">Dashboard</h2> {/* Increased font size for the heading */}
         <button
