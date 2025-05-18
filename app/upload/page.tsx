@@ -182,6 +182,7 @@ if (!isLoggedIn) {
       }
   
       const data = await response.json();
+      console.log("Backend response:", data); 
       setAnalysis(data);
 
     
@@ -308,7 +309,7 @@ if (!isLoggedIn) {
                     <li key={idx} className="mb-2">
                       {fb.message
                         ? fb.message
-                        : `${fb.acne_type} (${fb.count}): ${fb.note || fb.encouragement}`}
+                        : `${fb.acne_type} (${fb.count}): ${fb.note || fb.treatment} ${fb.encouragement}`}
                     </li>
                   ))}
                 </ul>
@@ -426,7 +427,7 @@ if (!isLoggedIn) {
                     <li key={idx} className="mb-2">
                       {fb.message
                         ? fb.message
-                        : `${fb.acne_type} (${fb.count}): ${fb.note || fb.encouragement}`}
+                        : `${fb.acne_type} (${fb.count}): ${fb.note || fb.treatment} ${fb.encouragement}`}
                     </li>
                   ))}
                 </ul>
