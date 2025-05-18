@@ -152,7 +152,7 @@ export default function Dashboard() {
             activeTab === "score" ? "bg-blue-500 text-white" : "bg-gray-300"
           }`}
         >
-          View Score
+          Home
         </button>
         <button
           onClick={() => handleTabChange("upload")}
@@ -366,7 +366,7 @@ export default function Dashboard() {
                   Score: {scoreHistory[0].score}
                 </div>
                 {/* Before Date */}
-                <div className="absolute top-24 left-4 bg-gray-800 text-white mt-4 px-3 py-1 rounded">
+                <div className="absolute top-24 left-4 bg-gray-800 text-white px-3 py-1 rounded">
                   Date: {new Date(scoreHistory[0].date).toLocaleDateString()}
                 </div>
               </div>
@@ -392,7 +392,7 @@ export default function Dashboard() {
                   Score: {scoreHistory[scoreHistory.length - 1].score}
                 </div>
                 {/* After Date */}
-                <div className="absolute top-24 right-4 mt-4 bg-gray-800 text-white px-3 py-1 rounded">
+                <div className="absolute top-24 right-4 bg-gray-800 text-white px-3 py-1 rounded">
                   Date: {new Date(scoreHistory[scoreHistory.length - 1].date).toLocaleDateString()}
                 </div>
               </div>
@@ -431,7 +431,7 @@ export default function Dashboard() {
                 <div
                   className="w-8 h-8 bg-black text-white flex items-center justify-center rounded-full"
                   style={{
-                    transform: "translate(0%, -50%)", // Center the circle horizontally and vertically
+                    transform: "translate(-50%, -50%)", // Center the circle horizontally and vertically
                     position: "absolute",
                     top: "50%", // Vertically center the circle
                   }}
@@ -445,9 +445,47 @@ export default function Dashboard() {
               Upload at least 2 images to compare.
             </p>
           )}
+
+          {/* Calendar Section */}
+          {scoreHistory.length > 0 && (
+            <div className="mt-8 w-full max-w-md">
+              <h2 className="text-2xl font-bold mb-4 text-center">Download Image by Date</h2>
+              <select
+                className="w-full p-3 border border-gray-300 rounded-lg mb-4"
+                onChange={(e) => setSelectedDate(e.target.value)}
+              >
+                <option value="">Select a Date</option>
+                {scoreHistory.map((entry, index) => (
+                  <option key={index} value={entry.date}>
+                    {new Date(entry.date).toLocaleDateString()}
+                  </option>
+                ))}
+              </select>
+              {selectedDate && (
+                <div className="text-center">
+                  <button
+                    className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                    onClick={() => {
+                      const selectedEntry = scoreHistory.find(
+                        (entry) => entry.date === selectedDate
+                      );
+                      if (selectedEntry) {
+                        const link = document.createElement("a");
+                        link.href = selectedEntry.imageUrl;
+                        link.download = `image-${new Date(selectedEntry.date).toLocaleDateString()}.jpg`;
+                        link.click();
+                      }
+                    }}
+                  >
+                    Download Image
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
-                  
+                        
       </div>
     </div>
   );
